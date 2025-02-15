@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dom Manipulation</title>
+    <style>
+      body {
+        background-color: rgb(52, 47, 47);
+        color: rgb(213, 201, 201);
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="language">
+      <li>Javascript</li>
+    </ul>
+  </body>
+  <script>
+    function addLanguage(langName, bgcolor, color, radius, pad) {
+      const li = document.createElement("li");
+      li.innerHTML = langName;
+      li.style.backgroundColor = bgcolor;
+      li.style.color = color;
+      li.style.borderRadius = radius;
+      li.style.padding = pad;
+
+      const selector = document.querySelector(".language");
+      selector.appendChild(li);
+    }
+    addLanguage("C#", "gray", "red", "20px", "20px");
+    addLanguage("Python", "blue", "green", "20px", "20px");
+
+    function Optimizelang(langName) {
+      const li = document.createElement("li");
+      li.appendChild(document.createTextNode(langName));
+      document.querySelector(".language").appendChild(li);
+      console.log(li);
+    }
+    Optimizelang("GOLang");
+
+    //edit
+    const data = document.querySelector("li:nth-child(2)");
+    const newLi = document.createElement("li")
+    newLi.textContent = "mojo"
+    data.replaceWith(newLi)
+
+    //edit
+    const firstLang = document.querySelector("li:first-child")
+    firstLang.innerHTML = "JS"
+
+    //remove 
+    const lastLang = document.querySelector("li:last-child")
+    // lastLang.remove()
+
+  </script>
+</html>

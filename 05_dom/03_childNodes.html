@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Element</title>
+    <style>
+      body {
+        background-color: rgb(52, 47, 47);
+        color: rgb(213, 201, 201);
+      }
+    </style>
+  </head>
+  <body></body>
+  <script>
+    const div = document.createElement("div");
+    console.log(div);
+    div.className = "main"
+    div.id= Math.floor(Math.random()*10+1)
+    div.setAttribute("title","generate_title")
+    div.style.backgroundColor="green"
+    div.style.height="50px"
+    div.style.width="90px"
+    div.style.borderRadius="9px"
+    div.style.textAlign="center"
+    // div.innerText="hello"
+    const addText = document.createTextNode("Hello")
+    div.appendChild(addText)
+
+    document.body.appendChild(div)
+  </script>
+</html>
