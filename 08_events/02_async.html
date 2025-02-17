@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async</title>
+  </head>
+  <body>
+    <h1>Himanshu</h1>
+    <button id="stop">stop</button>
+  </body>
+  <script>
+    function sayMyName() {
+      console.log("Himanshu");
+    }
+    const changeName = () => {
+      document.querySelector("h1").innerHTML = "Himanshu Khairnar";
+    };
+    const name = setTimeout(changeName, 2000);
+    document.querySelector("#stop").addEventListener("click", () => {
+        clearTimeout(name)
+        console.log("Timeout stop");
+        
+    });
+  </script>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async</title>
+  </head>
+  <body>
+    <h1>Himanshu</h1>
+    <button id="stop">stop</button>
+    <button id="start">start</button>
+  </body>
+  <script>
+    const date = (str) => {
+      console.log(str, Date.now(), 1000);
+    };
+    
+    let intervalData 
+    
+    document.querySelector("#stop").addEventListener("click", () => {
+    clearInterval(intervalData)
+
+    });
+
+    document.querySelector("#start").addEventListener("click", () => {
+       intervalData = setInterval(date, 2000, "himanshu");
+    });
+  </script>
+</html>

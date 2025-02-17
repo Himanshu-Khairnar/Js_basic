@@ -13,11 +13,10 @@ let playGame = true;
 let remaining = 10;
 let prvGuess = [];
 if (playGame) {
-  
   submitButton.addEventListener("click", (e) => {
-    e.preventDefault()
+    e.preventDefault();
     userData = parseInt(inputData.value);
-     validateDate(userData);
+    validateDate(userData);
   });
 }
 
@@ -67,17 +66,14 @@ function endGame() {
   div.appendChild(p);
   playGame = false;
   p.addEventListener("click", () => startGame());
-
 }
 
 function startGame() {
-  inputData.removeAttribute("disabled")
-  playGame = true
-  previousGuess.innerHTML=""
-  message.innerHTML=""
-  remainingGuess.innerHTML = 10
-
-  
+  inputData.removeAttribute("disabled");
+  playGame = true;
+  previousGuess.innerHTML = "";
+  message.innerHTML = "";
+  remainingGuess.innerHTML = 10;
 }
 
 //     <div id="wrapper">
