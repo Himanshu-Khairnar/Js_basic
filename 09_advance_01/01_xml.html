@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="background-color: rgb(49, 30, 30); color: antiquewhite">
+    <button id="getCard">Get Card</button>
+  </body>
+  <script>
+    let data;
+    const url = "https://api.github.com/users/Himanshu-Khairnar";
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+
+    xhr.onreadystatechange = function () {
+      console.log(xhr.readyState);
+
+      if (xhr.readyState === 4) {
+        data = JSON.parse(this.responseText);
+        console.log(data);
+      }
+    };
+    xhr.send();
+
+    document.querySelector("#getCard").addEventListener("click", () => {
+      const div = document.createElement("div");
+      div.setAttribute("class", "card");
+      const h1 = document.createElement("h1");
+      const p = document.createElement("p");
+      const img = document.createElement("img");
+
+      div.style.cssText = `
+        width: 300px;
+        background-color: #3d2c2c;
+        color: antiquewhite;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        margin: 20px auto;
+        text-align: center;
+      `;
+
+      h1.innerHTML = `Name: ${data.login}`;
+      h1.style.fontSize = "20px";
+
+      p.innerHTML = `Bio: ${data.bio}`;
+      p.style.fontSize = "16px";
+
+      img.setAttribute("src", data.avatar_url);
+      img.style.cssText = `
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-top: 10px;
+      `;
+      document.body.appendChild(div);
+      div.appendChild(h1);
+      div.appendChild(p);
+      div.appendChild(img);
+    });
+  </script>
+</html>
