@@ -50,7 +50,7 @@ function CheckWinner(arr, currentPlayer) {
     ) {
       message.innerHTML = `Congratulations! 🎉 The game is over, and ${currentPlayer.toUpperCase()} Player emerges victorious! 🏆 Ready for a rematch?`;
     } else if (!arr.includes("a")) {
-      message.innerHTML = ` The game is over, and its a tie! 🏆 Ready for a rematch?`;
+      message.innerHTML = w` The game is over, and its a tie! 🏆 Ready for a rematch?`;
     }
   }
 }
