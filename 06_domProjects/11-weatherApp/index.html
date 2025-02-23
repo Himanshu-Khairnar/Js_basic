@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background: linear-gradient(135deg, #74ebd5, #acb6e5);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .weather-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 300px;
+      }
+      .search-box {
+        margin-bottom: 20px;
+      }
+      .search-box input {
+        width: 80%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .search-box button {
+        padding: 8px;
+        border: none;
+        background: #4caf50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .weather-info {
+        margin-top: 20px;
+      }
+      .temperature {
+        font-size: 2em;
+        font-weight: bold;
+      }
+         .weather-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .weather-info h1 {
+            font-size: 1.5em;
+            color: #333;
+        }
+        .weather-info h3 {
+            font-size: 1.2em;
+            color: #555;
+            margin: 5px 0;
+        }
+        .weather-info img {
+            width: 80px;
+            height: 80px;
+        }
+        .weather-info p {
+            font-size: 1em;
+            color: #666;
+            margin: 5px 0;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="weather-container">
+      <div class="search-box">
+        <input type="text" id="city" placeholder="Enter city name" />
+        <button id="search">Search</button>
+      </div>
+      <div class="weather-info"></div>
+    </div>
+  </body>
+
+  <script>
+    const search = document.getElementById("search");
+    const weatherDiv = document.querySelector(".weather-info");
+    search.addEventListener("click",  () => {
+      const value = document.getElementById("city").value;
+       getWeatherData(value);
+    });
+
+    async function getWeatherData(city) {
+      const API_key = "....";
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}&units=metric`
+      );
+
+      const data = await res.json();
+      console.log(data);
+
+      displayWeatherData(data);
+    }
+    function displayWeatherData(data) {
+      const temp = data?.main.temp;
+      const humidity = data?.main.humidity;
+      const desc = data?.weather[0].description;
+      const icon = data?.weather[0].icon;
+      const wind = data?.wind.speed;
+      const city = data?.name;
+      const iconUrl = `http://openweathermap.org/img/w/${icon}.png`;
+      console.log(iconUrl);
+      weatherDiv.innerHTML = `<h1>City: ${city} </h1>
+                            <h3> ${desc}</h3>
+                            <img src="${iconUrl}" alt="weather icon"/>
+                            <p>temp: ${temp}</p>
+                            <p>Humidity: ${humidity}</p>
+                            <p>wind: ${wind}</p>`;
+    }
+  </script>
+</html>
