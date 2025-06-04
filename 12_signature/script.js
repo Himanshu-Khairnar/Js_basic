@@ -1,78 +1,110 @@
 const canvas = document.getElementById("signature-pad");
 const ctx = canvas.getContext("2d");
+let isDrawing = false;
+let x = 0,
+  y = 0;
+let penColor = "#000000";
+let penSize = 2;
 
-// Function to resize canvas while preserving content
-function resizeCanvas() {
-  const tempCanvas = document.createElement("canvas");
-  tempCanvas.width = canvas.width;
-  tempCanvas.height = canvas.height;
-  tempCanvas.getContext("2d").drawImage(canvas, 0, 0);
+let paths = [];
+let redoStack = [];
 
-  const containerWidth = canvas.parentElement.clientWidth;
-  canvas.width = containerWidth;
-  canvas.height = 200;
-
-  ctx.drawImage(
-    tempCanvas,
-    0,
-    0,
-    tempCanvas.width,
-    tempCanvas.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+function startDrawing(e) {
+  isDrawing = true;
+  [x, y] = [e.offsetX, e.offsetY];
+  paths.push([{ x, y, color: penColor, size: penSize }]);
 }
 
-// Initial resize
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+function draw(e) {
+  if (!isDrawing) return;
 
-// Drawing logic
-let drawing = false;
-
-canvas.addEventListener("mousedown", () => (drawing = true));
-canvas.addEventListener("mouseup", () => (drawing = false));
-canvas.addEventListener("mouseout", () => (drawing = false));
-canvas.addEventListener("mousemove", draw);
-
-function draw(event) {
-  if (!drawing) return;
-
-  const rect = canvas.getBoundingClientRect();
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = penColor;
+  ctx.lineWidth = penSize;
   ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
 
-  ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
-  ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+  ctx.moveTo(x, y);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+
+  x = e.offsetX;
+  y = e.offsetY;
+
+  paths[paths.length - 1].push({ x, y, color: penColor, size: penSize });
 }
 
-// Clear button
-document.getElementById("clear").addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-});
+function stopDrawing() {
+  isDrawing = false;
+}
 
-// Download as image
-document.getElementById("download-image").addEventListener("click", () => {
+function redrawCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (const path of paths) {
+    ctx.beginPath();
+    ctx.strokeStyle = path[0].color;
+    ctx.lineWidth = path[0].size;
+    ctx.moveTo(path[0].x, path[0].y);
+    for (let i = 1; i < path.length; i++) {
+      ctx.lineTo(path[i].x, path[i].y);
+    }
+    ctx.stroke();
+  }
+}
+
+// Events
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mouseup", stopDrawing);
+canvas.addEventListener("mouseleave", stopDrawing);
+
+// Controls
+document.getElementById("pen-color").onchange = (e) => {
+  penColor = e.target.value;
+};
+
+document.getElementById("pen-size").oninput = (e) => {
+  penSize = parseInt(e.target.value);
+};
+
+document.getElementById("undo").onclick = () => {
+  if (paths.length > 0) {
+    redoStack.push(paths.pop());
+    redrawCanvas();
+  }
+};
+
+document.getElementById("redo").onclick = () => {
+  if (redoStack.length > 0) {
+    paths.push(redoStack.pop());
+    redrawCanvas();
+  }
+};
+
+document.getElementById("save").onclick = () => {
+  localStorage.setItem("signature", JSON.stringify(paths));
+};
+
+document.getElementById("load").onclick = () => {
+  const saved = localStorage.getItem("signature");
+  if (saved) {
+    paths = JSON.parse(saved);
+    redrawCanvas();
+  }
+};
+
+document.getElementById("clear").onclick = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  paths = [];
+  redoStack = [];
+};
+
+document.getElementById("download-image").onclick = () => {
   const link = document.createElement("a");
   link.download = "signature.png";
   link.href = canvas.toDataURL();
   link.click();
-});
+};
 
-// Download as PDF
-document.getElementById("download-pdf").addEventListener("click", () => {
-  const opt = {
-    margin: 1,
-    filename: "signature.pdf",
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
-  };
-  html2pdf().from(canvas).set(opt).save();
-});
+document.getElementById("download-pdf").onclick = () => {
+  html2pdf().from(canvas).save("signature.pdf");
+};
