@@ -1,5 +1,6 @@
 const canvas = document.getElementById("signature-pad");
 const ctx = canvas.getContext("2d");
+
 let isDrawing = false;
 let x = 0,
   y = 0;
@@ -9,14 +10,52 @@ let penSize = 2;
 let paths = [];
 let redoStack = [];
 
+let lastWidth = canvas.offsetWidth;
+let lastHeight = canvas.offsetHeight;
+
+// Resize canvas to fit container
+function resizeCanvas() {
+  const container = canvas.parentElement;
+  const newWidth = container.clientWidth;
+  const newHeight = 300;
+
+  const scaleX = newWidth / lastWidth;
+  const scaleY = newHeight / lastHeight;
+
+  // Save current image data
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  // Set new dimensions
+  canvas.width = newWidth;
+  canvas.height = newHeight;
+
+  // Rescale paths
+  paths.forEach((path) => {
+    path.forEach((p) => {
+      p.x *= scaleX;
+      p.y *= scaleY;
+    });
+  });
+
+  lastWidth = newWidth;
+  lastHeight = newHeight;
+
+  redrawCanvas();
+}
+
 function startDrawing(e) {
   isDrawing = true;
-  [x, y] = [e.offsetX, e.offsetY];
+  const rect = canvas.getBoundingClientRect();
+  [x, y] = [e.clientX - rect.left, e.clientY - rect.top];
   paths.push([{ x, y, color: penColor, size: penSize }]);
 }
 
 function draw(e) {
   if (!isDrawing) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const newX = e.clientX - rect.left;
+  const newY = e.clientY - rect.top;
 
   ctx.strokeStyle = penColor;
   ctx.lineWidth = penSize;
@@ -24,11 +63,11 @@ function draw(e) {
 
   ctx.beginPath();
   ctx.moveTo(x, y);
-  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.lineTo(newX, newY);
   ctx.stroke();
 
-  x = e.offsetX;
-  y = e.offsetY;
+  x = newX;
+  y = newY;
 
   paths[paths.length - 1].push({ x, y, color: penColor, size: penSize });
 }
@@ -56,6 +95,8 @@ canvas.addEventListener("mousedown", startDrawing);
 canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseup", stopDrawing);
 canvas.addEventListener("mouseleave", stopDrawing);
+
+window.addEventListener("resize", resizeCanvas); // Make canvas resizable
 
 // Controls
 document.getElementById("pen-color").onchange = (e) => {
@@ -108,3 +149,6 @@ document.getElementById("download-image").onclick = () => {
 document.getElementById("download-pdf").onclick = () => {
   html2pdf().from(canvas).save("signature.pdf");
 };
+
+// Initial resize
+resizeCanvas();
