@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f7f7f7;
+    background: #f2f2f2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,31 +8,38 @@ body {
   }
   
   .container {
-    text-align: center;
-    background: white;
+    background-color: white;
     padding: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
   }
   
   select, button {
-    margin: 1rem 0;
     padding: 0.5rem 1rem;
+    margin: 1rem;
     font-size: 1rem;
+    border-radius: 8px;
   }
   
   .palette {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 1rem;
     gap: 1rem;
+    margin-top: 1rem;
   }
   
   .color-box {
-    width: 60px;
-    height: 60px;
-    border-radius: 0.5rem;
-    border: 2px solid #ccc;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: transform 0.2s;
+  }
+  
+  .color-box:hover {
+    transform: scale(1.1);
   }
   
