@@ -9,14 +9,15 @@
 <body>
   <div class="container">
     <h1>Mood Palette Generator</h1>
-    <select id="mood-select">
+    <select id="mood-select" aria-label="Select your mood">
       <option value="happy">😊 Happy</option>
       <option value="calm">😌 Calm</option>
       <option value="angry">😠 Angry</option>
       <option value="sad">😢 Sad</option>
     </select>
     <button id="generate">Generate Palette</button>
-    <div class="palette" id="palette"></div>
+    <div class="palette" id="palette" role="list"></div>
+    <div id="toast" class="toast hidden">Copied!</div>
   </div>
   <script src="script.js"></script>
 </body>
