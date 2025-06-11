@@ -8,21 +8,32 @@ const moodColors = {
 const moodSelect = document.getElementById("mood-select");
 const generateBtn = document.getElementById("generate");
 const paletteDiv = document.getElementById("palette");
+const toast = document.getElementById("toast");
 
 generateBtn.addEventListener("click", () => {
   const mood = moodSelect.value;
   const colors = moodColors[mood];
-  paletteDiv.innerHTML = ""; // Clear existing palette
+  paletteDiv.innerHTML = "";
 
   colors.forEach((color) => {
     const box = document.createElement("div");
     box.className = "color-box";
     box.style.backgroundColor = color;
-    box.title = color;
+    box.setAttribute("role", "listitem");
+    box.title = `Click to copy ${color}`;
     box.onclick = () => {
       navigator.clipboard.writeText(color);
-      alert(`Copied ${color} to clipboard!`);
+      showToast(`Copied ${color} to clipboard!`);
     };
     paletteDiv.appendChild(box);
   });
 });
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 1500);
+}
